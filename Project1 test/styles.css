@@ -1,0 +1,28 @@
+body{
+    text-align: center;
+    margin:auto;
+    margin-top: 7%;
+    margin-left: 10%;
+    margin-right: 10%;
+    height: 100px;
+   
+
+    background-image: url('/image/background.gif');
+    background-size:contain
+    
+    
+
+
+   
+}
+
+h1{
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+   
+}
+
+label{
+    
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+   
+}
