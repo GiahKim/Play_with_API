@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="main.js">
+    <title>I know what you did</title>
+</head>
+<body>
+    <h1>I know what you did that night.</h1><br>
+
+    <label for="date">PICK THE DATE</label><br>
+    <input type="date" id="start" name="dinner-time" value="2023-01-22" min="2000-01-01" max="2023-01-31"><br><br>
+    <label for="text">Who were you with?</label><br>
+    <input type="text" id="avatarText" name="avatarName"><br><br>
+    <!-- <input type="number" id="year" name="yearNumber">
+    <input type="number" id="month" name="monthNumber">
+    <input type="number" id="date" name="monthNumber"> -->
+    
+    <button role="button" id="initTrigger">START</button><br><br>
+    
+    <section id="avatarSection"></section>
+    <section id="mealSection"></section>
+    <section id="cocktailSection"></section>
+    <section id="NASAimage"></section>
+    <section id="yesnoSection"></section>
+
+        <script>
+        const triggerButton = document.getElementById('initTrigger')
+        // const textInput1 = document.getElementById("year")
+        // const textInput2 = document.getElementById("month")
+        // const textInput3 = document.getElementById("date")
+        const dateInput = document.getElementById("start")
+       
+
+        const avatarName = document.getElementById("avatarText")
+        //const textInput = textInput1.value+textInput2.value+textInput3.value
+        //nasaAPODurl+"?"+nasaAPIkey+"&"+nasaDate
+        
+        const avatarSection = document.getElementById('avatarSection')
+        const mealSection = document.getElementById('mealSection')
+        const cocktailSection = document.getElementById('cocktailSection')
+        const NASAsection = document.getElementById('NASAimage')
+        const yesnoSection = document.getElementById('yesnoSection')
+        
+        const avatarURL = "https://api.dicebear.com/5.x/pixel-art/svg/"
+        //const fortuneSign = "sign=<fortuneSignData.value>"
+        const avatarNameData = "seed=aries"
+    
+
+        const randomCocktailURL = "https://www.thecocktaildb.com/api/json/v1/1/random.php"
+        const mealURL ="https://www.themealdb.com/api/json/v1/1/random.php"
+        const nasaAPODurl = "https://api.nasa.gov/planetary/apod"
+        const nasaAPIkey = "api_key=cOxDwPWSPXa8DAI9Jwgv3zZIq2kg0QL0kfmColIU"
+        //const nasaDate = "date=2003-10-29"
+        const nasaDate = dateInput.value
+
+        const yesnoURL = "https://yesno.wtf/api"
+        
+        const fetchAvatarData = () => {
+            const inputText = document.getElementById("avatarText").value;
+            let fetchURL = ""
+
+            if(inputText.length == 0){
+                fetchURL = avatarURL + avatarNameData
+            }
+            else {
+                fetchURL = avatarURL+"seed="+inputText
+            }
+            
+            console.log(fetchURL)
+            fetch(fetchURL)
+                .then((response) =>  response.text() )
+                .then((text) => appendAvatarData(text))
+        }
+
+        const appendAvatarData = (data) => {
+            //console.log(data)
+            avatarSection.innerHTML = ""
+            const inputText = document.getElementById("avatarText").value;
+
+            const avatarImg = document.createElement('div')
+            avatarImg.innerHTML = data
+            // avatarImg.alt = "the image of " + avatarTitle
+            avatarSection.appendChild(avatarImg)
+
+            const avatarHeader = document.createElement('h2')
+            avatarHeader.innerText = "This is " + inputText + " who you met"
+            avatarSection.appendChild(avatarHeader)
+           
+            fetchMealData()
+        }
+
+
+        const fetchMealData = () => {
+            fetch(mealURL)
+                .then((response) =>  response.json() )
+                .then((payload) => appendMealData(payload))
+
+        }
+
+        const appendMealData = (data) => {
+            mealSection.innerHTML = ""
+            console.log(data)
+
+            const firstMeal = data.meals[0]
+            const mealName = firstMeal.strMeal
+            const mealImg = firstMeal.strMealThumb
+
+            const mealHeader = document.createElement('h3')
+            mealHeader.innerText = "And I know you ate " + mealName
+            mealSection.appendChild(mealHeader)
+
+            const image = document.createElement('img')
+            image.src = mealImg
+            image.alt = "image of " + mealName
+            mealSection.appendChild(image)
+
+            fetchCocktailData()
+        }
+
+        const fetchCocktailData = () => {
+            fetch(randomCocktailURL)
+                .then((response) =>  response.json() )
+                .then((payload) => appendCocktailData(payload))
+
+        }
+
+        const appendCocktailData = (data) => {
+            cocktailSection.innerHTML = ""
+            console.log(data)
+
+            const firstDrink = data.drinks[0]
+            const drinkName = firstDrink.strDrink
+            const drinkImg = firstDrink.strDrinkThumb
+
+            const nameHeader = document.createElement('h3')
+            nameHeader.innerText = "With " + drinkName + " drink"
+            cocktailSection.appendChild(nameHeader)
+
+            const image = document.createElement('img')
+            image.src = drinkImg
+            image.alt = "image of " + drinkName
+            cocktailSection.appendChild(image)
+
+            fetchNASAData()
+        }
+
+        const fetchNASAData = () => {
+            const inputText = document.getElementById("start").value;
+
+
+            if(inputText.length == 0){
+                fetchURL = nasaAPODurl+"?"+nasaAPIkey+"&"+"date="+nasaDate
+            }
+            else {
+                fetchURL = nasaAPODurl+"?"+nasaAPIkey+"&"+"date="+inputText
+            }
+            //fetchURL = nasaAPODurl+"?"+nasaAPIkey+"&"+"date="+inputText
+            //const fetchURL = nasaAPODurl+"?"+nasaAPIkey+"&"+"date="+nasaDate
+            fetch(fetchURL)
+                .then((payload) =>  payload.json() )
+                .then((json) => appendNASAData(json))
+        }
+
+        const appendNASAData = (data) => {
+            NASAsection.innerHTML = ""
+            console.log(data)
+
+            const picTitle = data.title
+            const imgURL = data.url
+
+            const picHeader = document.createElement('h3')
+            picHeader.innerText = picTitle
+            NASAsection.appendChild(picHeader)
+
+            const nasaImg = document.createElement('img')
+            nasaImg.src = imgURL
+            nasaImg.alt = "With this " + picTitle + " view"
+            NASAsection.appendChild(nasaImg)
+
+            fetchYesnoData()
+        }
+
+        const fetchYesnoData = () => {
+            fetch(yesnoURL)
+                .then((response) =>  response.json() )
+                .then((payload) => appendYesnoData(payload))
+
+        }
+
+        
+        
+        const appendYesnoData = (data) => {
+            yesnoSection.innerHTML = ""
+            console.log(data)
+
+            const answerText = data.answer
+            const imgURL = data.image
+
+            const yesnoHeader = document.createElement('h1')
+            yesnoHeader.innerText = "Am I right? " + answerText
+            yesnoSection.appendChild(yesnoHeader)
+
+            const yesnoImg = document.createElement('img')
+            yesnoImg.src = imgURL
+            yesnoImg.alt = answerText
+
+            yesnoSection.appendChild(yesnoImg)
+
+
+        }
+     
+
+        triggerButton.addEventListener("click", fetchAvatarData )
+    </script>
+</body>
+</html>
