@@ -1,2 +1,2 @@
-# CT4_2023_Spring
-Creative Technology4 2023 Spring projects
+# Play_with_API
+Giah Kim
